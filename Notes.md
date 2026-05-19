@@ -111,3 +111,21 @@ The final HTML still shows class= and for=.
 
 ### Hot Module Replacement (HMR)
 Vite watches files → recompiles only the changed module → pushes it to the browser via WebSocket → swaps in memory. No reload, state preserved.
+
+
+## Milestone 9 
+
+### Decisions
+- Round floating-point results in the UI (~10 decimals)
+- Manual test 2.4 will start passing once this is implemented
+
+## A11y improvements to investigate
+- Result announcement is technically working via aria-live=polite, but can be obscured by VoiceOver's button verbosity after Calculate is pressed
+- Try: role="status" on the result element
+- Try: separate the result into a region with aria-atomic="true"
+- Test with screen reader users if possible, not just VoiceOver dev-testing
+- Result announcement is obscured by button verbosity; error/validation messages are audible (likely because they're longer phrases)
+- Hypotheses to test:
+  - Length matters: prefixing the result with descriptive words ("Result: 10" spoken in full) may help
+  - Live-region priority matters: try role="status" or aria-live="assertive" on the result
+- Run side-by-side test once changes are applied, with VoiceOver verbosity at default High setting
