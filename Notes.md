@@ -129,3 +129,8 @@ Vite watches files → recompiles only the changed module → pushes it to the b
   - Length matters: prefixing the result with descriptive words ("Result: 10" spoken in full) may help
   - Live-region priority matters: try role="status" or aria-live="assertive" on the result
 - Run side-by-side test once changes are applied, with VoiceOver verbosity at default High setting
+
+## backend polish
+- Add @ControllerAdvice for unified error response format
+- Currently, Jackson deserialization errors return Spring's default error shape ({timestamp, status, error, path}) instead of our ErrorResponse ({error})
+- All controller-level validation already uses our format consistently
