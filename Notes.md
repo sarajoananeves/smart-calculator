@@ -134,3 +134,6 @@ Vite watches files → recompiles only the changed module → pushes it to the b
 - Add @ControllerAdvice for unified error response format
 - Currently, Jackson deserialization errors return Spring's default error shape ({timestamp, status, error, path}) instead of our ErrorResponse ({error})
 - All controller-level validation already uses our format consistently
+- Externalize CORS origin to properties
+- Harden api.ts against malformed responses (?)
+- Add request timeout to api.ts

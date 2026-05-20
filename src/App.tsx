@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { calculate, type Operator } from './calculate'
+import { calculateRemote } from './api'
+import type { Operator } from './calculate'
 import './App.css'
 
 function App() {
@@ -7,8 +8,9 @@ function App() {
     const [numB, setNumB] = useState('')
     const [op, setOp] = useState<Operator>('+')
     const [result, setResult] = useState('—')
+    const [isLoading, setIsLoading] = useState(false)
 
-    function handleCalculate() {
+    async function handleCalculate() {
         const a = Number(numA)
         const b = Number(numB)
 
@@ -17,8 +19,9 @@ function App() {
             return
         }
 
+        setIsLoading(true)
         try {
-            const value = calculate(a, b, op)
+            const value = await calculateRemote(a, b, op)
             setResult(String(value))
         } catch (error) {
             if (error instanceof Error) {
@@ -26,6 +29,8 @@ function App() {
             } else {
                 setResult('Unknown error')
             }
+        } finally {
+            setIsLoading(false)
         }
     }
 
@@ -77,7 +82,13 @@ function App() {
                     />
                 </div>
 
-                <button type="button" onClick={handleCalculate}>Calculate</button>
+                <button
+                    type="button"
+                    onClick={handleCalculate}
+                    disabled={isLoading}
+                >
+                    {isLoading ? 'Calculating…' : 'Calculate'}
+                </button>
             </form>
 
             <p aria-live="polite">Result: {result}</p>
