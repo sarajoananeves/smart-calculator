@@ -11,13 +11,13 @@ public class CalculatorService {
             case "-" -> a - b;
             case "*" -> a * b;
             case "/" -> divide(a, b);
-            default -> throw new IllegalArgumentException("Operator not supported: " + op);
+            default -> throw new IllegalArgumentException(Messages.operatorNotSupported(op));
         };
     }
 
     private double divide(double a, double b) {
         if (b == 0) {
-            throw new ArithmeticException("Cannot divide by zero");
+            throw new ArithmeticException(Messages.DIVIDE_BY_ZERO);
         }
         return a / b;
     }

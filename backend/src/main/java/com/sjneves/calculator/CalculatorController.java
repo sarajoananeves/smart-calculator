@@ -20,10 +20,10 @@ public class CalculatorController {
     @PostMapping("/api/calculate")
     public ResponseEntity<CalculatorResponse> calculate(@RequestBody CalculateRequest req) {
         if (req.a() == null || req.b() == null) {
-            return ResponseEntity.badRequest().body(new ErrorResponse("Please enter valid numbers"));
+            return ResponseEntity.badRequest().body(new ErrorResponse(Messages.INVALID_NUMBERS));
         }
         if (req.op() == null || !VALID_OPERATORS.contains(req.op())) {
-            return ResponseEntity.badRequest().body(new ErrorResponse("Operator must be one of: +, -, *, /"));
+            return ResponseEntity.badRequest().body(new ErrorResponse(Messages.INVALID_OPERATOR));
         }
 
         try {

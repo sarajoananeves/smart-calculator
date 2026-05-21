@@ -48,13 +48,13 @@ class CalculatorControllerTest {
     @Test
     void shouldReturn422WhenDividingByZero() throws Exception {
         when(service.calculate(5.0, 0.0, "/"))
-                .thenThrow(new ArithmeticException("Cannot divide by zero"));
+                .thenThrow(new ArithmeticException(Messages.DIVIDE_BY_ZERO));
 
         mockMvc.perform(post("/api/calculate")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"a\": 5, \"b\": 0, \"op\": \"/\"}"))
                 .andExpect(status().isUnprocessableEntity())
-                .andExpect(jsonPath("$.error").value("Cannot divide by zero"));
+                .andExpect(jsonPath("$.error").value(Messages.DIVIDE_BY_ZERO));
     }
 
     @Test
@@ -63,7 +63,7 @@ class CalculatorControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"a\": 5, \"b\": 3, \"op\": \"%\"}"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.error").value("Operator must be one of: +, -, *, /"));
+                .andExpect(jsonPath("$.error").value(Messages.INVALID_OPERATOR));
     }
 
     @Test
@@ -72,7 +72,7 @@ class CalculatorControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"a\": 5, \"b\": 3, \"op\": null}"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.error").value("Operator must be one of: +, -, *, /"));
+                .andExpect(jsonPath("$.error").value(Messages.INVALID_OPERATOR));
     }
 
     @Test
@@ -81,7 +81,7 @@ class CalculatorControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"b\": 3, \"op\": \"+\"}"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.error").value("Please enter valid numbers"));
+                .andExpect(jsonPath("$.error").value(Messages.INVALID_NUMBERS));
     }
 
     @Test
@@ -90,7 +90,7 @@ class CalculatorControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"a\": 5, \"op\": \"+\"}"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.error").value("Please enter valid numbers"));
+                .andExpect(jsonPath("$.error").value(Messages.INVALID_NUMBERS));
     }
 
     @Test
@@ -99,7 +99,7 @@ class CalculatorControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"a\": null, \"b\": 3, \"op\": \"+\"}"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.error").value("Please enter valid numbers"));
+                .andExpect(jsonPath("$.error").value(Messages.INVALID_NUMBERS));
     }
 
     @Test
@@ -108,7 +108,7 @@ class CalculatorControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"a\": 5, \"b\": null, \"op\": \"+\"}"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.error").value("Please enter valid numbers"));
+                .andExpect(jsonPath("$.error").value(Messages.INVALID_NUMBERS));
     }
 
     @Test
@@ -116,9 +116,8 @@ class CalculatorControllerTest {
         mockMvc.perform(post("/api/calculate")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"a\": \"abc\", \"b\": 3, \"op\": \"+\"}"))
-                .andExpect(status().isBadRequest());
-        // Note: rejected by Jackson before reaching the controller.
-        // Response uses Spring's default error format, not our ErrorResponse.
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value(Messages.INVALID_NUMBERS));
     }
 
     @Test
@@ -126,7 +125,7 @@ class CalculatorControllerTest {
         mockMvc.perform(post("/api/calculate")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"a\": 5, \"b\": \"abc\", \"op\": \"+\"}"))
-                .andExpect(status().isBadRequest());
-        // Same Jackson-rejection caveat.
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value(Messages.INVALID_NUMBERS));
     }
 }

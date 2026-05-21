@@ -46,14 +46,14 @@ class CalculatorServiceTest {
     void shouldThrowWhenDividingByZero() {
         assertThatThrownBy(() -> service.calculate(5, 0, "/"))
                 .isInstanceOf(ArithmeticException.class)
-                .hasMessage("Cannot divide by zero");
+                .hasMessage(Messages.DIVIDE_BY_ZERO);
     }
 
     @Test
     void shouldThrowWhenOperatorNotSupported() {
         assertThatThrownBy(() -> service.calculate(5, 3, "%"))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Operator not supported: %");
+                .hasMessage(Messages.operatorNotSupported("%"));
     }
 
     @Test
