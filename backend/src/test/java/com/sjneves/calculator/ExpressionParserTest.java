@@ -1,5 +1,6 @@
 package com.sjneves.calculator;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -11,7 +12,7 @@ class ExpressionParserTest {
 
     private final ExpressionParser parser = new ExpressionParser();
 
-    @ParameterizedTest(name = "parses \"{0}\" as ({1} {3} {2})")
+    @ParameterizedTest(name = "[CALC-400] parses \"{0}\" as ({1} {3} {2})")
     @CsvSource({
             "7 plus 3,        7,   3,   +",
             "10 minus 4,      10,  4,   -",
@@ -29,7 +30,7 @@ class ExpressionParserTest {
         assertThat(result).isEqualTo(new ParseResponse(a, b, op));
     }
 
-    @ParameterizedTest(name = "parses \"{0}\" as percentage (a={1}, b={2}, op=*)")
+    @ParameterizedTest(name = "[CALC-401] parses \"{0}\" as percentage (a={1}, b={2}, op=*)")
     @CsvSource({
             "15% of 80,       0.15,  80",
             "15% on 80,       0.15,  80",
@@ -42,30 +43,35 @@ class ExpressionParserTest {
     }
 
     @Test
+    @DisplayName("[CALC-402] should handle leading and trailing white space")
     void shouldHandleLeadingAndTrailingWhitespace() {
         ParseResponse result = parser.parse("   7 plus 3   ");
         assertThat(result).isEqualTo(new ParseResponse(7.0, 3.0, "+"));
     }
 
     @Test
+    @DisplayName("[CALC-403] should throw on gibberish input")
     void shouldThrowOnGibberishInput() {
         assertThatThrownBy(() -> parser.parse("hello world"))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
+    @DisplayName("[CALC-404] should throw on half expression")
     void shouldThrowOnHalfExpression() {
         assertThatThrownBy(() -> parser.parse("7 plus"))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
+    @DisplayName("[CALC-405] should throw when operator has no surrounding spaces")
     void shouldThrowWhenOperatorHasNoSurroundingSpaces() {
         assertThatThrownBy(() -> parser.parse("5plus3"))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
+    @DisplayName("[CALC-406] should throw on unknown operator word")
     void shouldThrowOnUnknownOperatorWord() {
         assertThatThrownBy(() -> parser.parse("5 foo 3"))
                 .isInstanceOf(IllegalArgumentException.class);

@@ -151,3 +151,11 @@ Vite watches files → recompiles only the changed module → pushes it to the b
   "The number fields are empty. Did you mean to click Solve?"
 - Implementation: check both forms' state in each handler before showing
   the generic "Please enter..." message
+
+## Playwright cross-browser automation (in progress / pending)
+- Migrate 5.1 (smoke test across browsers) from manual to automated
+- Stack: Playwright with @playwright/test runner
+- Browsers to cover: Chrome (Chromium), Firefox, Safari (WebKit)
+- Scope for v1: 3-4 critical user flows (happy path, divide-by-zero, validation, smart input)
+- Configuration: one config file, runs same tests across all 3 browsers automatically
+- After this: 5.1 can be removed from manual-tests.md entirely

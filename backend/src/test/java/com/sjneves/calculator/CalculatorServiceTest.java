@@ -1,5 +1,6 @@
 package com.sjneves.calculator;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -12,6 +13,7 @@ class CalculatorServiceTest {
 
     private final CalculatorService service = new CalculatorService();
 
+    @DisplayName("[CALC-200] should calculate correctly")
     @ParameterizedTest(name = "calculates {0} {2} {1} = {3}")
     @CsvSource({
             // Positive integers — one per operator
@@ -43,6 +45,7 @@ class CalculatorServiceTest {
     }
 
     @Test
+    @DisplayName("[CALC-201] should throw when dividing by zero")
     void shouldThrowWhenDividingByZero() {
         assertThatThrownBy(() -> service.calculate(5, 0, "/"))
                 .isInstanceOf(ArithmeticException.class)
@@ -50,6 +53,7 @@ class CalculatorServiceTest {
     }
 
     @Test
+    @DisplayName("[CALC-202] should throw when operator not supported")
     void shouldThrowWhenOperatorNotSupported() {
         assertThatThrownBy(() -> service.calculate(5, 3, "%"))
                 .isInstanceOf(IllegalArgumentException.class)
@@ -57,12 +61,14 @@ class CalculatorServiceTest {
     }
 
     @Test
+    @DisplayName("[CALC-203] floating point should not be exact")
     void floatingPointShouldNotBeExact() {
         double result = service.calculate(0.1, 0.2, "+");
         assertThat(result).isNotEqualTo(0.3);
     }
 
     @Test
+    @DisplayName("[CALC-204] floating point should be approximately equal")
     void floatingPointShouldBeApproximatelyEqual() {
         double result = service.calculate(0.1, 0.2, "+");
         assertThat(result).isCloseTo(0.3, within(0.0001));

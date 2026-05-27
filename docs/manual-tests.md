@@ -2,10 +2,8 @@
 
 ## Purpose
 Manual tests that complement the automated suite. Focus on:
-- User flows that span multiple actions in one session
 - Accessibility experience (screen reader, keyboard)
 - Visual/UX checks that automated tests can't capture
-- Browser compatibility spot checks
 
 ## How to use this document
 - Run before each PR that changes UI behavior
@@ -17,91 +15,16 @@ Manual tests that complement the automated suite. Focus on:
 
 ## Contents
 
-1. [Functional flows (chained operations)](#1-functional-flows-chained-operations)
-2. [Validation and input behavior](#2-validation-and-input-behavior)
-3. [Accessibility — keyboard navigation](#3-accessibility--keyboard-navigation)
-4. [Accessibility — screen reader (VoiceOver on macOS)](#4-accessibility--screen-reader-voiceover-on-macos)
-5. [Browser compatibility](#5-browser-compatibility)
+1. [Validation and input behavior](#1-validation-and-input-behavior)
+2. [Accessibility — keyboard navigation](#2-accessibility--keyboard-navigation)
+3. [Accessibility — screen reader (VoiceOver on macOS)](#3-accessibility--screen-reader-voiceover-on-macos)
+4. [Browser compatibility](#4-browser-compatibility)
 
 ---
 
-## 1. Functional flows (chained operations)
+## 1. Validation and input behavior
 
-### 1.1 Multiple calculations in sequence
-**Why**: Verifies state doesn't leak between calculations.
-
-**Steps**:
-1. Open the app
-2. Enter `5`, select `-`, enter `3`, click Calculate → expect `Result: 2`
-3. Change first number to `10` → expect the result to be cleared
-4. Click Calculate → expect `Result: 7`
-5. Change operator to `*`, click Calculate → expect `Result: 30`
-6. Change second number to `0` → expect the result to be cleared
-7. Change operator to `/`, click Calculate → expect "Cannot divide by zero"
-8. Change second number to `2` → expect the result to be cleared
-9. Click Calculate → expect `Result: 5`
-10. Change operator to `+`, click Calculate → expect `Result: 7`
-
-**Pass criteria**: All results match. No flicker, no stale values, no leftover error message.
-
----
-
-## 2. Validation and input behavior
-
-### 2.1 Empty fields validation
-**Why**: Verifies empty field validation in chained context.
-
-**Steps**:
-1. Open the app
-2. Enter `5` on first number, leave second number empty, select `*`, click Calculate → expect "Please enter valid numbers in both fields"
-3. Enter `10` on second number, click Calculate → expect `Result: 50`
-4. Clear the first number, click Calculate → expect "Please enter valid numbers in both fields"
-5. Change operator to `+`, click Calculate → expect "Please enter valid numbers in both fields"
-6. Enter `0` on first number, click Calculate → expect `Result: 10`
-7. Clear first and second numbers, click Calculate → expect "Please enter valid numbers in both fields"
-8. Change operator to `/`, click Calculate → expect "Please enter valid numbers in both fields"
-9. Enter `21`, enter `3`, click Calculate → expect `Result: 7`
-
-**Pass criteria**: All results match. No flicker, no stale values, no leftover error message.
-
----
-
-### 2.2 Pasted values validation
-**Why**: Verifies copying and pasting valid and invalid input.
-
-**Steps**:
-1. Open the app
-2. Copy and paste `abc` on first number → expect the field to be empty
-3. Click Calculate → expect "Please enter valid numbers in both fields"
-4. Copy and paste `abc` on second number, change operator to `*` → expect the field to be empty
-5. Click Calculate → expect "Please enter valid numbers in both fields"
-6. Copy and paste `5` on first number and second number, operator stays `*`, click Calculate → expect `Result: 25`
-7. Clear the number fields → expect the fields to be empty and result to reset 
-8. Copy and paste `5.5e2` on first number, enter `0` on second number, change operator to `+`, click Calculate → observe: scientific notation handling varies by browser. Record what you see (does the field show `5.5e2` or `550`? does the result equal `550` or something else?)
-
-
-**Pass criteria**:
-- Steps 2–5: invalid pastes never reach the result
-- Step 6: valid pastes calculate correctly
-- Step 7: clearing fields resets the result
-- Step 8: discovery — record findings; expected to differ across browsers
-
----
-
-### 2.3 Rapid double-click
-**Why**: Verifies the UI handles fast clicks without duplicate processing or race conditions.
-
-**Steps**:
-1. Open the app
-2. Enter `5`, enter `3`, double-click rapidly on Calculate → expect `Result: 8`
-3. Change operator to `*`, double-click rapidly on Calculate → expect `Result: 15`
-4. Change operator to `/`, change second number to `0`, double-click rapidly on Calculate → expect "Cannot divide by zero", no duplicate error message
-
-**Pass criteria**: Same result as a single click. No flashing, no double-rendered text, no duplicated UI elements.
-
----
-
-### 2.4 Decimals
+### [CALC-700] Decimals
 **Why**: Verifies floating-point precision is displayed in a user-friendly way (rounded).
 
 **Steps**:
@@ -114,24 +37,24 @@ Manual tests that complement the automated suite. Focus on:
 
 ---
 
-## 3. Accessibility — keyboard navigation
+## 2. Accessibility — keyboard navigation
 
-### 3.1 Tab order and focus visibility
+### [CALC-701] Tab order and focus visibility
 **Why**: Verifies users navigating by keyboard reach all controls in a sensible order, with visible focus at each step.
 
 **Setup**: do not use the mouse during this test.
 
 **Steps**:
 1. Open the app
-2. Tab from the address bar repeatedly → expect path: First number → Operator → Second number → Calculate → (back to browser chrome)
+2. Tab from the address bar repeatedly → expect path: First number → Operator → Second number → Calculate → Expression field → Solve → (back to browser chrome)
 3. Repeat pressing Tab to check the whole flow → expect a **visible focus indicator** (outline, glow, or similar) on each focused element
 4. Shift+Tab from Calculate back to First number → expect the reverse path and focus indicators
 
-**Pass criteria**: All four interactive elements are reachable in the expected order. Focus is always visible. No element is skipped, no focus trap.
+**Pass criteria**: All six interactive elements are reachable in the expected order. Focus is always visible. No element is skipped, no focus trap.
 
 ---
 
-### 3.2 Full calculation via keyboard only
+### [CALC-702] Full calculation via keyboard only
 **Why**: Verifies a complete calculation flow can be performed without a mouse.
 
 **Setup**: do not use the mouse during this test.
@@ -148,7 +71,7 @@ Manual tests that complement the automated suite. Focus on:
 
 ---
 
-### 3.3 Enter key behavior in number inputs
+### [CALC-703] Enter key behavior in number inputs
 **Why**: Verifies pressing Enter inside a number input does not accidentally submit the form (which would reload the page) or change focus unexpectedly.
 
 **Steps**:
@@ -158,11 +81,27 @@ Manual tests that complement the automated suite. Focus on:
 
 **Pass criteria**: Pressing Enter in a number input has no visible effect. The page does not reload. Typed values remain. Focus does not move.
 
-**Notes**: Behavior verified in Chrome on macOS. If Section 5 (browser compatibility) reveals different behavior elsewhere, re-evaluate this test.
+**Notes**: Behavior verified in Chrome on macOS. If Section 4 (browser compatibility) reveals different behavior elsewhere, re-evaluate this test.
 
 ---
 
-## 4. Accessibility — screen reader (VoiceOver on macOS)
+### [CALC-704] Full smart-input calculation via keyboard only
+**Why**: Verifies a complete natural-language calculation flow can be performed without a mouse.
+
+**Setup**: do not use the mouse during this test.
+
+**Steps**:
+1. Open the app
+2. Tab through calculator form (already covered in [CALC-701]) → reach Expression input
+3. Type `7 plus 3` → expect the input to contain the text
+4. Tab to Solve, press Enter → expect `Result: 10`
+5. Shift+Tab back to Expression, select all (Cmd+A), press Delete → expect Expression to be empty and Result to clear to `—`
+
+**Pass criteria**: The full smart-input calculation completes using only keyboard input. Pressing Enter on Solve triggers parsing + calculation. Clearing the Expression input resets the result.
+
+--- 
+
+## 3. Accessibility — screen reader (VoiceOver on macOS)
 
 **General setup for this section**:
 - Turn on VoiceOver: `Cmd + F5`
@@ -176,11 +115,11 @@ VoiceOver's verbosity around the Calculate button can partially obscure the aria
 The error and validation messages remain audible — likely because they are longer phrases that overlap with the button chatter.
 
 Hypothesis: prefixing the result with descriptive words (e.g., "Result: 10" spoken in full, rather than just "10") may also help cut through the verbosity.
-To be revisited during Milestone 9 a11y polish (see `NOTES.md`).
+To be revisited as part of future a11y improvements (see `NOTES.md`).
 
 ---
 
-### 4.1 Result is announced after Calculate
+### [CALC-705] Result is announced after Calculate
 **Why**: Verifies the result is announced to screen reader users automatically, without them needing to navigate to it. Catches bugs in the `aria-live` setup.
 
 **Setup**:
@@ -204,7 +143,7 @@ To be revisited during Milestone 9 a11y polish (see `NOTES.md`).
 
 ---
 
-### 4.2 Error message is announced when dividing by zero
+### [CALC-706] Error message is announced when dividing by zero
 **Why**: Verifies the error message is announced to screen reader users automatically, without them needing to navigate to it. Catches bugs in the `aria-live` setup.
 
 **Setup**:
@@ -229,7 +168,7 @@ To be revisited during Milestone 9 a11y polish (see `NOTES.md`).
 
 ---
 
-### 4.3 Validation message is announced when fields are empty
+### [CALC-707] Validation message is announced when number fields are empty
 **Why**: Verifies the validation message is announced to screen reader users automatically, without them needing to navigate to it. Catches bugs in the `aria-live` setup.
 
 **Setup**:
@@ -252,6 +191,44 @@ To be revisited during Milestone 9 a11y polish (see `NOTES.md`).
 
 ---
 
+### [CALC-708] Result is announced after Solve
+**Why**: Verifies the result from a natural-language calculation is announced to screen reader users automatically, same as the regular Calculate flow.
+
+**Setup**: same as [CALC-705]
+
+**Steps**:
+1. Tab past the calculator form to Expression → screen reader announces the focused element and actions
+2. Type `7 plus 3` → screen reader announces input
+3. Tab to Solve → screen reader announces the focused element
+4. Press Space or Enter to activate Solve → screen reader announces "10" (or "Result: 10") without navigating to the result
+
+**Pass criteria**:
+- The result is announced via aria-live without the user needing to navigate to it
+- The announcement is polite (does not interrupt other speech)
+
+**Cleanup**: Turn off VoiceOver.
+
+---
+
+### [CALC-709] Validation message is announced when expression field is empty
+**Why**: Verifies the validation message is announced to screen reader users automatically, without them needing to navigate to it. Catches bugs in the `aria-live` setup.
+
+**Setup**:
+- Turn on VoiceOver (`Cmd + F5`)
+- Open the app in your browser
+
+**Steps**:
+1. Without typing anything, Tab to Solve → expect the screen reader to announce the focused element and the actions available to interact with it
+2. Press Space or Enter to activate Solve → expect the screen reader to announce "Please enter an expression" without navigating to the result
+
+**Pass criteria**:
+- The validation message is spoken automatically after Solve is activated
+- The announcement is polite (does not interrupt other speech)
+
+**Cleanup**: Turn off VoiceOver (`Cmd + F5`)
+
+---
+
 ### Known limitations — Firefox + VoiceOver
 On macOS Firefox + VoiceOver, the aria-live announcements (result, error, validation)
 do not fire reliably. The text appears visually but is not announced.
@@ -265,10 +242,13 @@ For screen reader users, we recommend Chrome or Safari on macOS.
 
 ---
 
-## 5. Browser compatibility
+## 4. Browser compatibility
 
-### 5.1 Smoke test across major browsers
+### [CALC-710] Smoke test across major browsers
 **Why**: Verifies the calculator's core functionality works across major browsers. Catches regressions from browser-specific quirks (input handling, focus styling, form behavior).
+
+**Status**: Manual for now. Investigating Playwright automation as follow-up to remove cross-browser tests from the manual plan entirely.
+
 
 **Steps** — repeat the following in each browser listed below:
 1. Open the app

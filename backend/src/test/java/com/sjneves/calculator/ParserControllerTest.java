@@ -1,6 +1,8 @@
 package com.sjneves.calculator;
 
 import java.util.stream.Stream;
+
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -29,6 +31,7 @@ class ParserControllerTest {
     private ExpressionParser parser;
 
     @Test
+    @DisplayName("[CALC-500] should call parser with expression")
     void shouldCallParserWithExpression() throws Exception {
         when(parser.parse("7 plus 3")).thenReturn(new ParseResponse(7.0, 3.0, "+"));
 
@@ -41,6 +44,7 @@ class ParserControllerTest {
     }
 
     @Test
+    @DisplayName("[CALC-501] should return parser response on success")
     void shouldReturnParseResponseOnSuccess() throws Exception {
         when(parser.parse("7 plus 3")).thenReturn(new ParseResponse(7.0, 3.0, "+"));
 
@@ -61,7 +65,7 @@ class ParserControllerTest {
         );
     }
 
-    @ParameterizedTest(name = "returns 400 when expression is {0}")
+    @ParameterizedTest(name = "[CALC-502] returns 400 when expression is {0}")
     @MethodSource("invalidExpressions")
     void shouldReturn400WhenExpressionIsInvalid(String scenario, String requestBody) throws Exception {
         mockMvc.perform(post("/api/parse")
@@ -74,6 +78,7 @@ class ParserControllerTest {
     }
 
     @Test
+    @DisplayName("[CALC-503] should return 400 when parser throws")
     void shouldReturn400WhenParserThrows() throws Exception {
         when(parser.parse("gibberish"))
                 .thenThrow(new IllegalArgumentException(Messages.COULD_NOT_PARSE));
