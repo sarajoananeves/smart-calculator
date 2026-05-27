@@ -111,7 +111,6 @@ Manual tests that complement the automated suite. Focus on:
 4. Enter `0.3`, enter `0.2`, click Calculate → expect `Result: 0.5`
 
 **Pass criteria**: Results display rounded floating-point (~10 decimals max).
-**Status**: ❌ Currently fails — the app shows raw float (e.g., `0.30000000000000004`). To be fixed in M9.
 
 ---
 
@@ -250,6 +249,19 @@ To be revisited during Milestone 9 a11y polish (see `NOTES.md`).
 - The announcement is polite (does not interrupt other speech)
 
 **Cleanup**: Turn off VoiceOver (`Cmd + F5`)
+
+---
+
+### Known limitations — Firefox + VoiceOver
+On macOS Firefox + VoiceOver, the aria-live announcements (result, error, validation)
+do not fire reliably. The text appears visually but is not announced.
+
+- Chrome + VoiceOver: ✅ announces correctly
+- Safari + VoiceOver: ✅ announces correctly
+- Firefox + VoiceOver: ❌ does not announce reliably
+
+This is a known limitation of the Firefox/VoiceOver pairing and not specific to this app.
+For screen reader users, we recommend Chrome or Safari on macOS.
 
 ---
 

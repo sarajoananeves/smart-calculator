@@ -3,7 +3,8 @@ import userEvent from '@testing-library/user-event'
 import { axe } from 'jest-axe'
 import { beforeEach, vi } from 'vitest'
 import App from './App'
-import { calculateRemote } from './api'
+import {calculateRemote, parseExpression} from './api'
+import type { Operator } from './calculate'
 
 vi.mock('./api')
 
@@ -134,5 +135,117 @@ describe('App', () => {
         const { container } = render(<App />)
         const results = await axe(container)
         expect(results).toHaveNoViolations()
+    })
+
+    it.each([
+        { expression: '7 plus 3',          parsedA: 7,    parsedB: 3,   parsedOp: '+', result: 10,  expectedDisplay: '10' },
+        { expression: '10 minus 4',        parsedA: 10,   parsedB: 4,   parsedOp: '-', result: 6,   expectedDisplay: '6'  },
+        { expression: '6 times 5',         parsedA: 6,    parsedB: 5,   parsedOp: '*', result: 30,  expectedDisplay: '30' },
+        { expression: '20 divided by 4',   parsedA: 20,   parsedB: 4,   parsedOp: '/', result: 5,   expectedDisplay: '5'  },
+        { expression: 'tip 10% of 230',    parsedA: 0.1,  parsedB: 230, parsedOp: '*', result: 23,  expectedDisplay: '23' },
+    ])('parses "$expression" and shows result $expectedDisplay', async ({ expression, parsedA, parsedB, parsedOp, result, expectedDisplay }) => {
+        vi.mocked(parseExpression).mockResolvedValue({ a: parsedA, b: parsedB, op: parsedOp as Operator })
+        vi.mocked(calculateRemote).mockResolvedValue(result)
+        const user = userEvent.setup()
+        render(<App />)
+
+        await user.type(screen.getByLabelText(/expression/i), expression)
+        await user.click(screen.getByRole('button', { name: /solve/i }))
+
+        expect(await screen.findByText(new RegExp(`result:\\s*${expectedDisplay}`, 'i'))).toBeInTheDocument()
+        expect(parseExpression).toHaveBeenCalledWith(expression)
+        expect(calculateRemote).toHaveBeenCalledWith(parsedA, parsedB, parsedOp)
+    })
+
+    it.each([
+        '7plus3',
+        '15% discount on 200',
+        '7*3',
+    ])('shows error when parser rejects "%s"', async (expression) => {
+        vi.mocked(parseExpression).mockRejectedValue(
+            new Error("Sorry, I couldn't understand that. Try '7 plus 3' or '15% of 80'.")
+        )
+        const user = userEvent.setup()
+        render(<App />)
+
+        await user.type(screen.getByLabelText(/expression/i), expression)
+        await user.click(screen.getByRole('button', { name: /solve/i }))
+
+        expect(await screen.findByText(/sorry, i couldn't understand/i)).toBeInTheDocument()
+        expect(calculateRemote).not.toHaveBeenCalled()
+    })
+
+    it('shows validation when expression is empty', async () => {
+        const user = userEvent.setup()
+        render(<App />)
+
+        await user.click(screen.getByRole('button', { name: /solve/i }))
+
+        expect(screen.getByText(/please enter an expression/i)).toBeInTheDocument()
+        expect(parseExpression).not.toHaveBeenCalled()
+        expect(calculateRemote).not.toHaveBeenCalled()
+    })
+
+    it('disables the Solve button while parsing is pending', async () => {
+        vi.mocked(parseExpression).mockReturnValue(new Promise(() => {}))
+        const user = userEvent.setup()
+        render(<App />)
+
+        await user.type(screen.getByLabelText(/expression/i), '7 plus 3')
+        await user.click(screen.getByRole('button', { name: /solve/i }))
+
+        const solvingButton = await screen.findByRole('button', { name: /solving/i })
+        expect(solvingButton).toBeDisabled()
+    })
+
+    it.each<{
+        action: string
+        perform: (user: ReturnType<typeof userEvent.setup>) => Promise<void>
+    }>([
+        {
+            action: 'typing in first number',
+            perform: (user) => user.type(screen.getByLabelText(/first number/i), '5'),
+        },
+        {
+            action: 'typing in second number',
+            perform: (user) => user.type(screen.getByLabelText(/second number/i), '5'),
+        },
+        {
+            action: 'changing the operator',
+            perform: (user) => user.selectOptions(screen.getByLabelText(/operator/i), '*'),
+        },
+    ])('clears expression when $action', async ({ perform }) => {
+        const user = userEvent.setup()
+        render(<App />)
+
+        const expressionInput = screen.getByLabelText(/expression/i) as HTMLInputElement
+        await user.type(expressionInput, '7 plus 3')
+        expect(expressionInput.value).toBe('7 plus 3')
+
+        await perform(user)
+        expect(expressionInput.value).toBe('')
+    })
+
+    it('clears number inputs and resets operator when typing in expression', async () => {
+        const user = userEvent.setup()
+        render(<App />)
+
+        const numA = screen.getByLabelText(/first number/i) as HTMLInputElement
+        const numB = screen.getByLabelText(/second number/i) as HTMLInputElement
+        const opSelect = screen.getByLabelText(/operator/i) as HTMLSelectElement
+
+        await user.type(numA, '5')
+        await user.type(numB, '3')
+        await user.selectOptions(opSelect, '*')
+
+        expect(numA.value).toBe('5')
+        expect(numB.value).toBe('3')
+        expect(opSelect.value).toBe('*')
+
+        await user.type(screen.getByLabelText(/expression/i), 'x')
+
+        expect(numA.value).toBe('')
+        expect(numB.value).toBe('')
+        expect(opSelect.value).toBe('+')
     })
 })

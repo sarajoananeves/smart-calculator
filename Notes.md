@@ -130,10 +130,24 @@ Vite watches files → recompiles only the changed module → pushes it to the b
   - Live-region priority matters: try role="status" or aria-live="assertive" on the result
 - Run side-by-side test once changes are applied, with VoiceOver verbosity at default High setting
 
+## Future a11y exploration
+- Investigate alternatives to aria-live=polite for Firefox compatibility
+  (e.g., role="alert", manual announcement strategies)
+- Test with NVDA on Windows for broader screen reader coverage
+- Consider hiring/consulting actual screen reader users for real-world validation
+
 ## backend polish
 - Add @ControllerAdvice for unified error response format
 - Currently, Jackson deserialization errors return Spring's default error shape ({timestamp, status, error, path}) instead of our ErrorResponse ({error})
 - All controller-level validation already uses our format consistently
 - Externalize CORS origin to properties
-- Harden api.ts against malformed responses (?)
-- Add request timeout to api.ts
+- Harden api.ts against malformed responses (?): no need for this project, it would be good if going to production
+- Add request timeout to api.ts: also good if going to production, no need here
+
+## UX polish: helpful validation messages
+- When user clicks Solve but smart input is empty AND calculator has values:
+  "The expression field is empty. Did you mean to click Calculate?"
+- When user clicks Calculate but numbers are empty AND expression has text:
+  "The number fields are empty. Did you mean to click Solve?"
+- Implementation: check both forms' state in each handler before showing
+  the generic "Please enter..." message

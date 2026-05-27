@@ -117,7 +117,7 @@ class CalculatorControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"a\": \"abc\", \"b\": 3, \"op\": \"+\"}"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.error").value(Messages.INVALID_NUMBERS));
+                .andExpect(jsonPath("$.error").value(Messages.INVALID_FORMAT));
     }
 
     @Test
@@ -126,6 +126,6 @@ class CalculatorControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"a\": 5, \"b\": \"abc\", \"op\": \"+\"}"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.error").value(Messages.INVALID_NUMBERS));
+                .andExpect(jsonPath("$.error").value(Messages.INVALID_FORMAT));
     }
 }

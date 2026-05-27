@@ -10,6 +10,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse> handleUnreadableMessage(HttpMessageNotReadableException e) {
-        return ResponseEntity.badRequest().body(new ErrorResponse(Messages.INVALID_NUMBERS));
+        return ResponseEntity.badRequest().body(new ErrorResponse(Messages.INVALID_FORMAT));
     }
 }
