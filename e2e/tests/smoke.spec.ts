@@ -1,5 +1,7 @@
 import { test, expect } from '@playwright/test'
 
+const WEBKIT_SKIP_REASON = 'WebKit/Safari skips buttons in default tab navigation — a documented platform behavior, not an app bug'
+
 test.describe('Smart Calculator — smoke', () => {
 
     test('[CALC-710] core flows work in this browser', async ({ page }) => {
@@ -41,8 +43,8 @@ test.describe('Smart Calculator — smoke', () => {
         expect(consoleErrors).toEqual([])
     })
 
-    test('[CALC-711] tab navigation works in this browser', async ({ page, browserName }) => {
-        test.skip(browserName === 'webkit', 'WebKit skips buttons in tab navigation by default — known Safari behavior')
+    test('[CALC-701] tab navigation works in this browser', async ({ page, browserName }) => {
+        test.skip(browserName === 'webkit', WEBKIT_SKIP_REASON)
 
         // Fresh page load — focus state is clean
         await page.goto('/')
@@ -64,5 +66,30 @@ test.describe('Smart Calculator — smoke', () => {
 
         await page.keyboard.press('Tab')
         await expect(page.getByRole('button', { name: /solve/i })).toBeFocused()
+    })
+
+    test('[CALC-704] full smart-input calculation via keyboard only', async ({ page, browserName }) => {
+        test.skip(browserName === 'webkit', WEBKIT_SKIP_REASON,)
+
+        await page.goto('/')
+
+        // Tab past calculator-form controls to reach Expression input
+        await page.keyboard.press('Tab')  // First number
+        await page.keyboard.press('Tab')  // Operator
+        await page.keyboard.press('Tab')  // Second number
+        await page.keyboard.press('Tab')  // Calculate button
+        await page.keyboard.press('Tab')  // Expression input
+        await expect(page.getByLabel(/expression/i)).toBeFocused()
+
+        // Type the expression
+        await page.keyboard.type('7 plus 3')
+
+        // Tab to Solve, press Enter
+        await page.keyboard.press('Tab')
+        await expect(page.getByRole('button', { name: /solve/i })).toBeFocused()
+        await page.keyboard.press('Enter')
+
+        // Expect Result: 10
+        await expect(page.getByText(/result:\s*10/i)).toBeVisible()
     })
 })

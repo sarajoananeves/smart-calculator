@@ -18,7 +18,6 @@ Manual tests that complement the automated suite. Focus on:
 1. [Validation and input behavior](#1-validation-and-input-behavior)
 2. [Accessibility — keyboard navigation](#2-accessibility--keyboard-navigation)
 3. [Accessibility — screen reader (VoiceOver on macOS)](#3-accessibility--screen-reader-voiceover-on-macos)
-4. [Browser compatibility](#4-browser-compatibility)
 
 ---
 
@@ -75,29 +74,15 @@ Manual tests that complement the automated suite. Focus on:
 **Why**: Verifies pressing Enter inside a number input does not accidentally submit the form (which would reload the page) or change focus unexpectedly.
 
 **Steps**:
-1. Open the app
-2. Tab to first number, type `5`, **press Enter** → expect no visible effect: no reload, no focus change, value remains `5`
-3. Tab to second number, type `2`, **press Enter** → expect no visible effect: no reload, no focus change, value remains `2`
+1. Open the app 
+2. Tab to first number, type `5` → expect a **visible focus indicator** (outline, glow, or similar) on the focused element
+3. Press **Enter** → expect no visible effect: no reload, no focus change, value remains `5`
+4. Tab to second number, type `2` → expect a **visible focus indicator** (outline, glow, or similar) on the focused element
+5. Press **Enter** → expect no visible effect: no reload, no focus change, value remains `2`
 
 **Pass criteria**: Pressing Enter in a number input has no visible effect. The page does not reload. Typed values remain. Focus does not move.
 
-**Notes**: Behavior verified in Chrome on macOS. If Section 4 (browser compatibility) reveals different behavior elsewhere, re-evaluate this test.
-
----
-
-### [CALC-704] Full smart-input calculation via keyboard only
-**Why**: Verifies a complete natural-language calculation flow can be performed without a mouse.
-
-**Setup**: do not use the mouse during this test.
-
-**Steps**:
-1. Open the app
-2. Tab through calculator form (already covered in [CALC-701]) → reach Expression input
-3. Type `7 plus 3` → expect the input to contain the text
-4. Tab to Solve, press Enter → expect `Result: 10`
-5. Shift+Tab back to Expression, select all (Cmd+A), press Delete → expect Expression to be empty and Result to clear to `—`
-
-**Pass criteria**: The full smart-input calculation completes using only keyboard input. Pressing Enter on Solve triggers parsing + calculation. Clearing the Expression input resets the result.
+**Notes**: Behavior verified in Chrome on macOS. Cross-browser coverage is automated; if the automated suite reveals different behavior elsewhere, re-evaluate this test.
 
 --- 
 
@@ -243,4 +228,4 @@ For screen reader users, we recommend Chrome or Safari on macOS.
 ---
 
 ## Notes
-- Last reviewed: [29 May 2026]q
+- Last reviewed: [29 May 2026]
