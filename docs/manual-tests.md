@@ -242,38 +242,5 @@ For screen reader users, we recommend Chrome or Safari on macOS.
 
 ---
 
-## 4. Browser compatibility
-
-### [CALC-710] Smoke test across major browsers
-**Why**: Verifies the calculator's core functionality works across major browsers. Catches regressions from browser-specific quirks (input handling, focus styling, form behavior).
-
-**Status**: Manual for now. Investigating Playwright automation as follow-up to remove cross-browser tests from the manual plan entirely.
-
-
-**Steps** — repeat the following in each browser listed below:
-1. Open the app
-2. Calculate `7 + 3` → expect `Result: 10`
-3. Calculate `10 / 0` → expect "Cannot divide by zero"
-4. Click Calculate with empty fields → expect "Please enter valid numbers in both fields"
-5. Tab through controls → verify focus is visible on each
-6. Open the browser's developer console → verify no JavaScript errors
-
-**Browsers to test** (latest stable versions):
-- Chrome on macOS
-- Safari on macOS
-- Firefox on macOS
-
-**Pass criteria**:
-- Core calculation works identically in each browser
-- Validation and error messages display correctly
-- Keyboard navigation works
-- No JavaScript errors in the console
-- Minor visual differences (focus ring style, default fonts) are acceptable
-
-**Notes from last run**: (Browser, OS, date, observations)
-
----
-
 ## Notes
-- Last reviewed: [date]
-- Tested on: macOS 14, Chrome xx, Safari xx, Firefox xx (example — keep current)
+- Last reviewed: [29 May 2026]q
