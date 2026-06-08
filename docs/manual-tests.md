@@ -11,6 +11,32 @@ Manual tests that complement the automated suite. Focus on:
 - Note any failures with date, browser, and steps to reproduce
 - Update when new UI behavior is added
 
+## Session setup (applies to all tests)
+Done once at the start of a TestCompass session:
+- Open the app in your chosen browser
+- Confirm browser and OS when the agent asks
+
+## Test format
+
+Each test in this file follows this shape:
+
+```
+### [TEST-ID] Title
+**Why**: brief reason this test exists
+**Setup** (optional): preconditions specific to this test
+**Patterns** (optional): comma-separated pattern names from patterns.md
+**Steps**:
+1. action → expect outcome
+2. ...
+**Pass criteria**: what overall success means
+**On failure** (optional): test-specific hints
+**Cleanup** (optional): post-test actions
+**Notes** (optional): known limitations, history, etc.
+```
+
+Test IDs follow the format `[PROJECT-KEY-NUMBER]` (e.g., `[CALC-702]`).  
+Each section gets a range of 100 numbers (1.x → 001–099, 2.x → 100–199, ...).
+
 ---
 
 ## Contents
@@ -58,13 +84,14 @@ Manual tests that complement the automated suite. Focus on:
 
 **Setup**: do not use the mouse during this test.
 
+**Patterns**: control-not-responsive
+
 **Steps**:
-1. Open the app 
-2. Tab to navigate to first number, type `3` → expect the first number to contain `3`
-3. Tab to navigate to operator, **use Up/Down arrows** to select `-` → expect the operator to be `-`
-4. Tab to navigate to second number, type `-2` → expect the second number to contain `-2`
-5. Tab to navigate to Calculate, **press Enter** → expect `Result: 5`
-6. Shift+Tab back to First number, **select all (Cmd+A) and press Delete** → expect first number to be empty and the result to clear to `—`
+1. Tab to navigate to first number, type `3` → expect the first number to contain `3`
+2. Tab to navigate to operator, **use Up/Down arrows** to select `-` → expect the operator to be `-`
+3. Tab to navigate to second number, type `-2` → expect the second number to contain `-2`
+4. Tab to navigate to Calculate, **press Enter** → expect `Result: 5`
+5. Shift+Tab back to First number, **select all (Cmd+A) and press Delete** → expect first number to be empty and the result to clear to `—`
 
 **Pass criteria**: The full calculation completes using only keyboard input. Pressing Enter on Calculate triggers the calculation. Clearing an input resets the result.
 
