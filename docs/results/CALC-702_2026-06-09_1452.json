@@ -1,0 +1,27 @@
+{
+  "test_id": "CALC-702",
+  "test_title": "Full calculation via keyboard only",
+  "test_def_hash": "3529d59f",
+  "run": {
+    "started_at": "2026-06-09T14:52:54+0100",
+    "finished_at": "2026-06-09T14:52:54+0100",
+    "duration_seconds": 0,
+    "user": "sara.neves@8x8.com",
+    "git_commit": "5658ad4"
+  },
+  "environment": {
+    "browser": "chrome",
+    "os": "macOS"
+  },
+  "outcome": {
+    "overall": "pass",
+    "notes": ""
+  },
+  "steps": [
+    { "n": 1, "status": "pass" },
+    { "n": 2, "status": "pass" },
+    { "n": 3, "status": "pass" },
+    { "n": 4, "status": "pass" },
+    { "n": 5, "status": "pass" }
+  ]
+}

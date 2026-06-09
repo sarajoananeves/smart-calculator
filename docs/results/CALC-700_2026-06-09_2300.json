@@ -1,0 +1,25 @@
+{
+  "test_id": "CALC-700",
+  "test_title": "Decimals",
+  "test_def_hash": "96530f7b",
+  "run": {
+    "started_at": "2026-06-09T23:00:00Z",
+    "finished_at": "2026-06-09T23:00:00Z",
+    "duration_seconds": 0,
+    "user": "sara.neves@8x8.com",
+    "git_commit": "5658ad4"
+  },
+  "environment": {
+    "browser": "chrome",
+    "os": "macOS 26.4.1"
+  },
+  "outcome": {
+    "overall": "pass",
+    "notes": ""
+  },
+  "steps": [
+    { "n": 1, "status": "pass" },
+    { "n": 2, "status": "pass" },
+    { "n": 3, "status": "pass" }
+  ]
+}

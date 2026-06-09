@@ -137,10 +137,10 @@ Vite watches files → recompiles only the changed module → pushes it to the b
 - Consider hiring/consulting actual screen reader users for real-world validation
 
 ## backend polish
-- Add @ControllerAdvice for unified error response format
+- Add @ControllerAdvice for unified error response format - done in M8
 - Currently, Jackson deserialization errors return Spring's default error shape ({timestamp, status, error, path}) instead of our ErrorResponse ({error})
 - All controller-level validation already uses our format consistently
-- Externalize CORS origin to properties
+- Externalize CORS origin to properties - done in M8
 - Harden api.ts against malformed responses (?): no need for this project, it would be good if going to production
 - Add request timeout to api.ts: also good if going to production, no need here
 

@@ -53,10 +53,9 @@ Each section gets a range of 100 numbers (1.x → 001–099, 2.x → 100–199, 
 **Why**: Verifies floating-point precision is displayed in a user-friendly way (rounded).
 
 **Steps**:
-1. Open the app
-2. Enter `0.1`, enter `0.2`, click Calculate → expect `Result: 0.3`
-3. Enter `1.5`, enter `2.5`, click Calculate → expect `Result: 4`
-4. Enter `0.3`, enter `0.2`, click Calculate → expect `Result: 0.5`
+1. Enter `0.1`, enter `0.2`, click Calculate → expect `Result: 0.3`
+2. Enter `1.5`, enter `2.5`, click Calculate → expect `Result: 4`
+3. Enter `0.3`, enter `0.2`, click Calculate → expect `Result: 0.5`
 
 **Pass criteria**: Results display rounded floating-point (~10 decimals max).
 
@@ -70,10 +69,9 @@ Each section gets a range of 100 numbers (1.x → 001–099, 2.x → 100–199, 
 **Setup**: do not use the mouse during this test.
 
 **Steps**:
-1. Open the app
-2. Tab from the address bar repeatedly → expect path: First number → Operator → Second number → Calculate → Expression field → Solve → (back to browser chrome)
-3. Repeat pressing Tab to check the whole flow → expect a **visible focus indicator** (outline, glow, or similar) on each focused element
-4. Shift+Tab from Calculate back to First number → expect the reverse path and focus indicators
+1. Tab from the address bar repeatedly → expect path: First number → Operator → Second number → Calculate → Expression field → Solve → (back to browser chrome)
+2. Repeat pressing Tab to check the whole flow → expect a **visible focus indicator** (outline, glow, or similar) on each focused element
+3. Shift+Tab from Solve back to First number → expect the reverse path and focus indicators
 
 **Pass criteria**: All six interactive elements are reachable in the expected order. Focus is always visible. No element is skipped, no focus trap.
 
@@ -101,11 +99,10 @@ Each section gets a range of 100 numbers (1.x → 001–099, 2.x → 100–199, 
 **Why**: Verifies pressing Enter inside a number input does not accidentally submit the form (which would reload the page) or change focus unexpectedly.
 
 **Steps**:
-1. Open the app 
-2. Tab to first number, type `5` → expect a **visible focus indicator** (outline, glow, or similar) on the focused element
-3. Press **Enter** → expect no visible effect: no reload, no focus change, value remains `5`
-4. Tab to second number, type `2` → expect a **visible focus indicator** (outline, glow, or similar) on the focused element
-5. Press **Enter** → expect no visible effect: no reload, no focus change, value remains `2`
+1. Tab to first number, type `5` → expect a **visible focus indicator** (outline, glow, or similar) on the focused element
+2. Press **Enter** → expect no visible effect: no reload, no focus change, value remains `5`
+3. Tab to second number, type `2` → expect a **visible focus indicator** (outline, glow, or similar) on the focused element
+4. Press **Enter** → expect no visible effect: no reload, no focus change, value remains `2`
 
 **Pass criteria**: Pressing Enter in a number input has no visible effect. The page does not reload. Typed values remain. Focus does not move.
 
@@ -134,9 +131,7 @@ To be revisited as part of future a11y improvements (see `NOTES.md`).
 ### [CALC-705] Result is announced after Calculate
 **Why**: Verifies the result is announced to screen reader users automatically, without them needing to navigate to it. Catches bugs in the `aria-live` setup.
 
-**Setup**:
-- Turn on VoiceOver (`Cmd + F5`)
-- Open the app in your browser
+**Setup**: Turn on VoiceOver (`Cmd + F5`)
 
 **Steps**:
 1. Tab to first number → expect the screen reader to announce the focused element and the actions available to interact with it
@@ -158,9 +153,7 @@ To be revisited as part of future a11y improvements (see `NOTES.md`).
 ### [CALC-706] Error message is announced when dividing by zero
 **Why**: Verifies the error message is announced to screen reader users automatically, without them needing to navigate to it. Catches bugs in the `aria-live` setup.
 
-**Setup**:
-- Turn on VoiceOver (`Cmd + F5`)
-- Open the app in your browser
+**Setup**: Turn on VoiceOver (`Cmd + F5`)
 
 **Steps**:
 1. Tab to first number → expect the screen reader to announce the focused element and the actions available to interact with it
@@ -183,9 +176,7 @@ To be revisited as part of future a11y improvements (see `NOTES.md`).
 ### [CALC-707] Validation message is announced when number fields are empty
 **Why**: Verifies the validation message is announced to screen reader users automatically, without them needing to navigate to it. Catches bugs in the `aria-live` setup.
 
-**Setup**:
-- Turn on VoiceOver (`Cmd + F5`)
-- Open the app in your browser
+**Setup**: Turn on VoiceOver (`Cmd + F5`)
 
 **Steps**:
 1. Without typing anything, Tab to Calculate → expect the screen reader to announce the focused element and the actions available to interact with it
@@ -206,7 +197,7 @@ To be revisited as part of future a11y improvements (see `NOTES.md`).
 ### [CALC-708] Result is announced after Solve
 **Why**: Verifies the result from a natural-language calculation is announced to screen reader users automatically, same as the regular Calculate flow.
 
-**Setup**: same as [CALC-705]
+**Setup**: Turn on VoiceOver (`Cmd + F5`)
 
 **Steps**:
 1. Tab past the calculator form to Expression → screen reader announces the focused element and actions
@@ -218,16 +209,14 @@ To be revisited as part of future a11y improvements (see `NOTES.md`).
 - The result is announced via aria-live without the user needing to navigate to it
 - The announcement is polite (does not interrupt other speech)
 
-**Cleanup**: Turn off VoiceOver.
+**Cleanup**: Turn off VoiceOver (`Cmd + F5`)
 
 ---
 
 ### [CALC-709] Validation message is announced when expression field is empty
 **Why**: Verifies the validation message is announced to screen reader users automatically, without them needing to navigate to it. Catches bugs in the `aria-live` setup.
 
-**Setup**:
-- Turn on VoiceOver (`Cmd + F5`)
-- Open the app in your browser
+**Setup**: Turn on VoiceOver (`Cmd + F5`)
 
 **Steps**:
 1. Without typing anything, Tab to Solve → expect the screen reader to announce the focused element and the actions available to interact with it
@@ -255,4 +244,4 @@ For screen reader users, we recommend Chrome or Safari on macOS.
 ---
 
 ## Notes
-- Last reviewed: [29 May 2026]
+- Last reviewed: [9 June 2026]

@@ -6,9 +6,9 @@ Every test run produces one JSON file in `results/`.
 
 ## Filename
 
-`YYYY-MM-DD-HHMM-{TEST-ID}.json`
+`{TEST-ID}-YYYY-MM-DD-HHMM.json`
 
-Example: `results/2026-05-26-1042-CALC-702.json`
+Example: `results/CALC-702_2026-05-26_1042.json`
 
 ## Schema
 

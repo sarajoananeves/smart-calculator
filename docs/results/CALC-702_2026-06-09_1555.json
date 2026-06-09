@@ -1,0 +1,33 @@
+{
+  "test_id": "CALC-702",
+  "test_title": "Full calculation via keyboard only",
+  "test_def_hash": "bdced260",
+  "run": {
+    "started_at": "2026-06-09T14:55:15Z",
+    "finished_at": "2026-06-09T14:55:15Z",
+    "duration_seconds": 0,
+    "user": "sarajoananeves@gmail.com",
+    "git_commit": "5658ad4"
+  },
+  "environment": {
+    "browser": "chrome",
+    "os": "macOS"
+  },
+  "outcome": {
+    "overall": "fail",
+    "failed_at_step": 5,
+    "notes": "Step 5: clearing OR typing something else in EITHER number field does not reset the result. The result display stays showing the previous value instead of clearing to the placeholder. Scope: not specific to the first field — both number fields exhibit it, and even editing (not just clearing) fails to reset the result. The number fields themselves accept input and clearing fine; the bug is isolated to the result display not resetting."
+  },
+  "steps": [
+    { "n": 1, "status": "pass" },
+    { "n": 2, "status": "pass" },
+    { "n": 3, "status": "pass" },
+    { "n": 4, "status": "pass" },
+    {
+      "n": 5,
+      "status": "fail",
+      "description": "Clearing or editing either number field does not reset the result; the result display keeps the previous value instead of clearing. Both fields affected; editing also fails to reset. Number fields accept input/clearing — only the result display fails to reset.",
+      "patterns_offered": ["control-not-responsive"]
+    }
+  ]
+}

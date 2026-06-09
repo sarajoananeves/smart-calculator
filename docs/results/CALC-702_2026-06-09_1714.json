@@ -1,0 +1,27 @@
+{
+  "test_id": "CALC-702",
+  "test_title": "Full calculation via keyboard only",
+  "test_def_hash": "3529d59f",
+  "run": {
+    "started_at": "2026-06-09T16:14:46Z",
+    "finished_at": "2026-06-09T16:14:46Z",
+    "duration_seconds": 0,
+    "user": "sara.neves@8x8.com",
+    "git_commit": "5658ad4"
+  },
+  "environment": {
+    "browser": "chrome",
+    "os": "macOS"
+  },
+  "outcome": {
+    "overall": "pass",
+    "notes": "Operator selector keyboard issue from the prior run appears fixed: Up/Down arrows now select the operator. Step 4 produced Result: 5 as expected."
+  },
+  "steps": [
+    { "n": 1, "status": "pass" },
+    { "n": 2, "status": "pass" },
+    { "n": 3, "status": "pass" },
+    { "n": 4, "status": "pass" },
+    { "n": 5, "status": "pass" }
+  ]
+}
