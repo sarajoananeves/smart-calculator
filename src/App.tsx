@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { calculateRemote, parseExpression } from './api'
 import type { Operator } from './calculate'
 import './App.css'
+import { messages } from './messages'
 
 function App() {
     const [numA, setNumA] = useState('')
@@ -21,7 +22,11 @@ function App() {
         const b = Number(numB)
 
         if (numA === '' || numB === '' || Number.isNaN(a) || Number.isNaN(b)) {
-            setResult('Please enter valid numbers in both fields')
+            if (expression.trim() !== '') {
+                setResult(messages.emptyNumbersDidYouMeanSolve)
+            } else {
+                setResult(messages.emptyNumbers)
+            }
             return
         }
 
@@ -33,7 +38,7 @@ function App() {
             if (error instanceof Error) {
                 setResult(error.message)
             } else {
-                setResult('Unknown error')
+                setResult(messages.unknownError)
             }
         } finally {
             setIsLoading(false)
@@ -42,7 +47,13 @@ function App() {
 
     async function handleParse() {
         if (expression.trim() === '') {
-            setResult('Please enter an expression')
+            const hasAnyNumberValue = numA !== '' || numB !== ''
+
+            if (hasAnyNumberValue) {
+                setResult(messages.emptyExpressionDidYouMeanCalculate)
+            } else {
+                setResult(messages.emptyExpression)
+            }
             return
         }
 
@@ -55,7 +66,7 @@ function App() {
             if (error instanceof Error) {
                 setResult(error.message)
             } else {
-                setResult('Unknown error')
+                setResult(messages.unknownError)
             }
         } finally {
             setIsParsing(false)
