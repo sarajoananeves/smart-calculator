@@ -174,7 +174,7 @@ To be revisited as part of future a11y improvements (see `NOTES.md`).
 ---
 
 ### [CALC-707] Validation message is announced when number fields are empty
-**Why**: Verifies the validation message is announced to screen reader users automatically, without them needing to navigate to it. Catches bugs in the `aria-live` setup.
+**Why**: Verifies the calculator's validation messages are announced to screen reader users automatically, without them needing to navigate to the result. Covers both the generic empty-fields message and the "Did you mean to click Solve?" hint that fires when both number fields are empty but the expression field holds text. Catches bugs in the `aria-live` setup.
 
 **Setup**: Turn on VoiceOver (`Cmd + F5`)
 
@@ -185,10 +185,13 @@ To be revisited as part of future a11y improvements (see `NOTES.md`).
 4. Press Space or Enter to activate Calculate → expect the screen reader to announce "Please enter valid numbers in both fields" without navigating to the result 
 5. Tab to first number, clear it, Tab to second number, type `4`, Tab to Calculate → expect the screen reader to announce the focused element and the actions available to interact with it
 6. Press Space or Enter to activate Calculate → expect the screen reader to announce "Please enter valid numbers in both fields" without navigating to the result
+7. Tab to the Expression field, type `7 plus 3` (this clears both number fields), then Tab to Calculate → expect the screen reader to announce the focused element and the actions available to interact with it
+8. Press Space or Enter to activate Calculate → expect the screen reader to announce "The number fields are empty. Did you mean to click Solve?" without navigating to the result
 
 **Pass criteria**:
-- The validation message is spoken automatically after Calculate is activated
-- The announcement is polite (does not interrupt other speech)
+- The generic validation message ("Please enter valid numbers in both fields") is spoken automatically when at least one number field is empty and the expression field is empty
+- The "Did you mean to click Solve?" hint is spoken automatically when both number fields are empty and the expression field holds text
+- All announcements are polite (do not interrupt other speech)
 
 **Cleanup**: Turn off VoiceOver (`Cmd + F5`)
 
@@ -214,21 +217,26 @@ To be revisited as part of future a11y improvements (see `NOTES.md`).
 ---
 
 ### [CALC-709] Validation message is announced when expression field is empty
-**Why**: Verifies the validation message is announced to screen reader users automatically, without them needing to navigate to it. Catches bugs in the `aria-live` setup.
+**Why**: Verifies the Solve button's validation messages are announced to screen reader users automatically, without them needing to navigate to the result. Covers both the generic empty-expression message and the "Did you mean to click Calculate?" hint that fires when the expression field is empty but at least one number field holds a value. Catches bugs in the `aria-live` setup.
 
 **Setup**: Turn on VoiceOver (`Cmd + F5`)
 
 **Steps**:
 1. Without typing anything, Tab to Solve → expect the screen reader to announce the focused element and the actions available to interact with it
 2. Press Space or Enter to activate Solve → expect the screen reader to announce "Please enter an expression" without navigating to the result
+3. Tab to first number, type `5` (this leaves the expression field empty), then Tab to Solve → expect the screen reader to announce the focused element and the actions available to interact with it
+4. Press Space or Enter to activate Solve → expect the screen reader to announce "The expression field is empty. Did you mean to click Calculate?" without navigating to the result
 
 **Pass criteria**:
-- The validation message is spoken automatically after Solve is activated
-- The announcement is polite (does not interrupt other speech)
+- The generic validation message ("Please enter an expression") is spoken automatically when the expression field is empty and both number fields are empty
+- The "Did you mean to click Calculate?" hint is spoken automatically when the expression field is empty and at least one number field holds a value
+- All announcements are polite (do not interrupt other speech)
 
 **Cleanup**: Turn off VoiceOver (`Cmd + F5`)
 
 ---
+
+
 
 ### Known limitations — Firefox + VoiceOver
 On macOS Firefox + VoiceOver, the aria-live announcements (result, error, validation)
@@ -244,4 +252,4 @@ For screen reader users, we recommend Chrome or Safari on macOS.
 ---
 
 ## Notes
-- Last reviewed: [9 June 2026]
+- Last reviewed: [12 June 2026]
