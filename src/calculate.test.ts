@@ -1,3 +1,7 @@
+// Tests for calculate() — a deliberate learning artifact (see calculate.ts).
+// calculate() is no longer called by the shipping UI (which uses calculateRemote in api.ts),
+// so these tests intentionally guard a reference implementation, not production behavior.
+// Kept on purpose; do not read their coverage as coverage of the live calculate path.
 import { describe, it, expect } from 'vitest'
 import { calculate } from './calculate'
 
