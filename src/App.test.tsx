@@ -431,4 +431,35 @@ describe('App', () => {
         const results = await axe(container)
         expect(results).toHaveNoViolations()
     })
+
+    it('[CALC-021] hints "did you mean Solve?" when numbers are empty but the expression has text', async () => {
+        const user = userEvent.setup()
+        render(<App />)
+
+        // Typing in the expression field clears both number inputs (see CALC-016),
+        // so this naturally produces "both numbers empty + expression filled".
+        await user.type(screen.getByLabelText(/expression/i), '7 plus 3')
+        await user.click(screen.getByRole('button', { name: /calculate/i }))
+
+        expect(
+            screen.getByText(/the number fields are empty\. did you mean to click solve\?/i)
+        ).toBeInTheDocument()
+        expect(calculateRemote).not.toHaveBeenCalled()
+    })
+
+    it('[CALC-022] hints "did you mean Calculate?" when the expression is empty but a number is filled', async () => {
+        const user = userEvent.setup()
+        render(<App />)
+
+        // Typing in a number field clears the expression (see CALC-015),
+        // so this naturally produces "expression empty + a number filled".
+        await user.type(screen.getByLabelText(/first number/i), '5')
+        await user.click(screen.getByRole('button', { name: /solve/i }))
+
+        expect(
+            screen.getByText(/the expression field is empty\. did you mean to click calculate\?/i)
+        ).toBeInTheDocument()
+        expect(parseExpression).not.toHaveBeenCalled()
+        expect(calculateRemote).not.toHaveBeenCalled()
+    })
 })

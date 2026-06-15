@@ -39,7 +39,21 @@ test.describe('Smart Calculator — smoke', () => {
         await page.getByRole('button', { name: /calculate/i }).click()
         await expect(page.getByText(/please enter valid numbers in both fields/i)).toBeVisible()
 
-        // Step 5: No JavaScript errors throughout the test
+        // Step 5: Empty number fields + expression typed → cross-field "did you mean Solve?" hint
+        await page.getByLabel(/expression/i).fill('7 plus 3')
+        await page.getByRole('button', { name: /calculate/i }).click()
+        await expect(
+            page.getByText(/the number fields are empty\. did you mean to click solve\?/i)
+        ).toBeVisible()
+
+        // Step 6: Empty expression + number typed → cross-field "did you mean Calculate?" hint
+        await page.getByLabel(/first number/i).fill('7')
+        await page.getByRole('button', { name: /solve/i }).click()
+        await expect(
+            page.getByText(/the expression field is empty\. did you mean to click calculate\?/i)
+        ).toBeVisible()
+
+        // Step 7: No JavaScript errors throughout the test
         expect(consoleErrors).toEqual([])
     })
 
