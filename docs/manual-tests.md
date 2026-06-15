@@ -44,6 +44,7 @@ Each section gets a range of 100 numbers (1.x → 001–099, 2.x → 100–199, 
 1. [Validation and input behavior](#1-validation-and-input-behavior)
 2. [Accessibility — keyboard navigation](#2-accessibility--keyboard-navigation)
 3. [Accessibility — screen reader (VoiceOver on macOS)](#3-accessibility--screen-reader-voiceover-on-macos)
+4. [Error handling and resilience](#4-error-handling-and-resilience)
 
 ---
 
@@ -248,6 +249,32 @@ do not fire reliably. The text appears visually but is not announced.
 
 This is a known limitation of the Firefox/VoiceOver pairing and not specific to this app.
 For screen reader users, we recommend Chrome or Safari on macOS.
+
+---
+
+## 4. Error handling and resilience
+
+### [CALC-711] Calculator service unreachable
+**Why**: Both Calculate and Solve call the backend over HTTP (`api.ts`). When the backend is down, the fetch rejects and the app must surface a clear, recoverable message rather than failing silently or showing a stack trace. This path can't be exercised by the component tests (they mock `api.ts`) or the e2e smoke test (it needs the backend up), so it is verified manually.
+
+**Setup**:
+- Make sure the backend is **stopped** (no process listening on `http://localhost:8081`). If it's running, stop it before starting this test.
+- The frontend dev server stays running; reload the page so it starts from a clean state.
+
+**Steps**:
+1. Enter `7`, operator `+`, enter `3`, click **Calculate** → expect the result region to announce/show `Cannot reach the calculator service. Is it running?` (not a result, not a blank screen, no uncaught error in the console)
+2. In the Expression field, type `7 plus 3`, click **Solve** → expect the same message: `Cannot reach the calculator service. Is it running?`
+3. Start the backend (`cd backend && ./mvnw spring-boot:run`), wait until it's listening on `8081`, then click **Calculate** again → expect `Result: 10` (the app recovers without a page reload)
+
+**Pass criteria**:
+- Both Calculate and Solve show `Cannot reach the calculator service. Is it running?` while the backend is down
+- The message is presented in the same result/aria-live region used for normal results and validation errors
+- No uncaught exception appears in the browser console
+- Once the backend is back up, a calculation succeeds without reloading the page
+
+**On failure**: confirm nothing else is bound to port `8081` and that the page was reloaded after stopping the backend. If the message text differs, check the hardcoded string in `src/api.ts` (it is intentionally not in `messages.ts`).
+
+**Cleanup**: leave the backend running for any subsequent tests.
 
 ---
 
