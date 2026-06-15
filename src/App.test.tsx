@@ -5,6 +5,7 @@ import { beforeEach, vi } from 'vitest'
 import App from './App'
 import { calculateRemote, parseExpression } from './api'
 import type { Operator } from './calculate'
+import { messages } from './messages'
 
 vi.mock('./api')
 
@@ -460,6 +461,36 @@ describe('App', () => {
             screen.getByText(/the expression field is empty\. did you mean to click calculate\?/i)
         ).toBeInTheDocument()
         expect(parseExpression).not.toHaveBeenCalled()
+        expect(calculateRemote).not.toHaveBeenCalled()
+    })
+
+    it('[CALC-023] shows the unknown-error fallback when Calculate rejects with a non-Error', async () => {
+        // A thrown value that is not an Error instance (e.g. a string) must fall
+        // through to the generic fallback rather than surfacing as "[object …]".
+        vi.mocked(calculateRemote).mockRejectedValue('boom')
+        const user = userEvent.setup()
+        render(<App />)
+
+        await user.type(screen.getByLabelText(/first number/i), '7')
+        await user.type(screen.getByLabelText(/second number/i), '3')
+        await user.click(screen.getByRole('button', { name: /calculate/i }))
+
+        expect(
+            await screen.findByText(new RegExp(`result:\\s*${messages.unknownError}`, 'i'))
+        ).toBeInTheDocument()
+    })
+
+    it('[CALC-024] shows the unknown-error fallback when Solve rejects with a non-Error', async () => {
+        vi.mocked(parseExpression).mockRejectedValue('boom')
+        const user = userEvent.setup()
+        render(<App />)
+
+        await user.type(screen.getByLabelText(/expression/i), '7 plus 3')
+        await user.click(screen.getByRole('button', { name: /solve/i }))
+
+        expect(
+            await screen.findByText(new RegExp(`result:\\s*${messages.unknownError}`, 'i'))
+        ).toBeInTheDocument()
         expect(calculateRemote).not.toHaveBeenCalled()
     })
 })
