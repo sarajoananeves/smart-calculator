@@ -43,7 +43,7 @@ Example: `results/CALC-702_2026-05-26_1042.json`
     "started_at": "2026-05-26T10:42:13Z",
     "finished_at": "2026-05-26T10:45:25Z",
     "duration_seconds": 192,
-    "user": "sara.neves",
+    "user": "user",
     "git_commit": "8b4d2f1"
   },
   "environment": {
@@ -75,7 +75,7 @@ Example: `results/CALC-702_2026-05-26_1042.json`
     "started_at": "2026-05-26T10:42:13Z",
     "finished_at": "2026-05-26T10:46:41Z",
     "duration_seconds": 268,
-    "user": "sara.neves",
+    "user": "user",
     "git_commit": "8b4d2f1"
   },
   "environment": {
