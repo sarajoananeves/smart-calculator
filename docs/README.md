@@ -1,4 +1,4 @@
-# TestCompass — One-Pager
+# TestCompass
 
 **TestCompass is a test-intelligence layer that helps engineers ship quality software without slowing down the development workflow.**
 
@@ -53,43 +53,47 @@ For exploratory cases — when an engineer is mid-development and just wants to 
 
 Proven: read a markdown test plan, walk through tests with the engineer, record results to local JSON, with strong guardrails against fabrication. Useful for exploratory manual testing during development. Slower than running tests by hand, so not the primary value — but a foundation.
 
-**Milestone 2 — Change-awareness (in progress)**
+**Milestone 2 — Change-awareness (validated on the calculator, pending real-project test)**
 
 Given a code change, TestCompass suggests:
 
+- Which automated tests (unit, component, integration, e2e, manual) to add or update
+- Which tests may have become stale or redundant 
 - Which existing manual tests to run
-- Which automated tests (unit, component, integration, e2e) to add or update
-- Which tests may have become stale or redundant
+- Project-wide coverage analysis with prioritized gaps
 
-This is where the LLM earns its keep. Validated on the calculator project before generalising.
+Validated on the calculator project: correct test selection across all levels, extend-vs-add judgment, source-grounded test drafting, self-review against source, coverage analysis with vitest + JaCoCo. Next: validation on a real company project.
 
 **Milestone 3 — Team / org integration (vision, for discussion)**
 
 - Read test definitions from JIRA XRay (read-only)
 - Identify tests that shouldn't be automated → defines the automation backlog
 - Identify possible duplicates for team review
-- Per sprint, prioritise "most wanted" automation candidates based on importance, frequency, run cost, and failure history
-- Engineers continue to record results in JIRA — TestCompass doesn't write back
+- Prioritise "most wanted" automation candidates based on given criteria and critical use cases documentation
 
 ## Build approach
 
 M1 was built as a Claude Code subagent for fast iteration.
 
-M2 will continue in that form for validation; if it proves itself, the core logic will be extracted into a CLI for portability and later wrapped as an IDE plugin.
+M2 was built and validated as a Claude Code subagent. If it proves itself on a real project, the core logic will be extracted into a CLI for portability and later wrapped as an IDE plugin.
 
 ## Success criteria
 
 M1: ✓ The walk-through works end-to-end, records honest data, and is fit for exploratory use. Closed.
 
-M2: For a real code change, the agent's test suggestions match what an experienced tester would suggest, including identifying tests to update before the engineer notices they're stale.
+M2: ✓ On the calculator project, the agent's test suggestions match what an experienced tester would suggest, including identifying tests to update, catching unconstructible test steps, and recognizing implicit negative coverage. Pending: same bar on a real company project.
 
-M3: A team uses TestCompass weekly to prioritise their automation backlog, and the manual testing load measurably decreases over time.
+M3: A team uses TestCompass to prioritise their automation backlog, and the manual testing load measurably decreases over time.
 
 
 ## Open questions
 
-- M2 quality bar: how do we evaluate "good enough" suggestions on a real codebase, not just the calculator? 
+- M2 quality bar: how do we evaluate "good enough" suggestions on a real project? 
 - Speed: M1's per-test overhead is structurally limited by LLM turn time. For M3 with JIRA integration, the speed model is different (more reading, less interactive walk-through). Worth re-evaluating when M3 is concrete. 
 - Integration: what does read-only XRay access look like in our environment? Who needs to be in that conversation?
+
+## Install
+
+See [SETUP.md](SETUP.md) for installation instructions.
 
 ---
